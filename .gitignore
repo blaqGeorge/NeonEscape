@@ -1,0 +1,19 @@
+# Unity generated folders
+Library/
+Temp/
+Obj/
+Logs/
+Build/
+UserSettings/
+.vs/
+*.csproj
+*.sln
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Unity project folders to keep
+!Assets/
+!ProjectSettings/
+!Packages/
