@@ -34,96 +34,43 @@ using UnityEngine.InputSystem.XR;
 
 public class RigidbodyMovement : MonoBehaviour
 {
-    private CharacterController controller;
-    public float speed = 5f;
     private Rigidbody rb;
-    public float dashSpeed;
-    public float dashTime;
-    private bool isDashing;
 
+    [SerializeField] private Animator animator;
+    [SerializeField] private float speed = 5f;
 
-    void Start()
+    private static readonly int IsMoving = Animator.StringToHash("IsMoving");
+
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        controller = GetComponent<CharacterController>();
+
+        animator = GetComponent<Animator>();
+        
     }
 
-    void Update()
+    private void Update()
     {
-    
         float moveX = Input.GetAxis("Vertical") * speed;
         float moveZ = Input.GetAxis("Horizontal") * speed;
-        Vector3 MoveDir = rb.linearVelocity;
-        rb.linearVelocity = new Vector3(-moveX, rb.linearVelocity.y, moveZ);
 
-        if (MoveDir != Vector3.zero)
+        Vector3 movement = new Vector3(-moveX, 0f, moveZ);
 
+        if (movement != Vector3.zero)
         {
-            transform.rotation = Quaternion.LookRotation(MoveDir);
+            // Character is moving
+            transform.rotation = Quaternion.LookRotation(movement);
+            animator.SetBool("isMoving", true);
+        }
+        else
+        {
+            // Character is idle
+            animator.SetBool("isMoving", false);
         }
 
-        //float moveX = Input.GetAxis("Vertical") * speed;
-        //float moveZ = Input.GetAxis("Horizontal") * speed;
+        Vector3 velocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
 
-        // Calculate movement direction
-        Vector3 moveDirection = new Vector3(-moveX, rb.linearVelocity.y, moveZ);
-       
+        rb.linearVelocity = velocity;
 
-        // Apply movement
-        //rb.linearVelocity = moveDirection;
-
-        // Rotate the player towards movement direction (if moving)
-        //if (moveDirection != Vector3.zero)
-        //{
-        //    transform.rotation = Quaternion.LookRotation(moveDirection);
-        //}
-
-        //if (Input.GetKey(KeyCode.E) && !isDashing)
-        //{
-        //    //StartCoroutine(Dash());
-        //    tp();
-        //   ;
-        //}
     }
-
-    //void tp()
-    //{
-    //    //if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.E))
-    //    //{
-    //    //    transform.position += new Vector3(-1.5f, 0, 0.2f);
-    //    //}
-    //    //else if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.E))
-    //    //{
-    //    //    transform.position -= new Vector3(+1.5f, 0, 0);
-    //    //}
-    //    Vector3 forwardDirection = transform.forward;
-
-    //    // Adjust teleport distance
-    //    float tpDistance = 1.5f;
-
-    //    // Move the player forward based on their current facing direction
-    //    transform.position += forwardDirection * tpDistance;
-
-    //}
-
-
-    //IEnumerator Dash()
-    //{
-    //    float startTime = Time.time;
-
-    //    //Vector3 dashDirection = rb.linearVelocity.normalized;
-    //    //while (Time.time < startTime + dashTime)
-    //    //{
-    //    //    rb.linearVelocity = dashDirection * dashSpeed;
-    //    //    yield return null;
-    //    //}
-
-       
-        
-        
-        
-
-    //    isDashing = false;
-
-    //}
 }
